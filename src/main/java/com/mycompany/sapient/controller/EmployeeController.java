@@ -37,6 +37,7 @@ public class EmployeeController {
 	
 	@GetMapping("/employees")
 	public ResponseEntity<Map<String,Object>> getEmployees(
+			@RequestParam(value = "employeeName", required = false) String employeeName,
 			@RequestParam(value = "page", defaultValue = "0") int page, 
 			@RequestParam(value = "size", defaultValue = "2") int size,
 			@RequestParam(value = "sort", defaultValue = "employeeId,asc") String[] sort
@@ -53,7 +54,9 @@ public class EmployeeController {
 			orderList.add(new Order(getSortDirection(sort[1]), sort[0]));
 		
 		Pageable paging = PageRequest.of(page, size, Sort.by(orderList));
-		Map<String,Object> employeeBeanList = employeeService.getEmployees(paging);
+		
+		Map<String,Object> employeeBeanList = employeeService.getEmployees(paging, employeeName);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(employeeBeanList);
 	}
 	

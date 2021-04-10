@@ -27,8 +27,12 @@ public class EmployeeService {
 		return employee.fetchEmployeeBean();
 	}
 	
-	public Map<String,Object> getEmployees(Pageable page){
-		Page<Employee> employeeList = employeeRepo.findAll(page);
+	public Map<String,Object> getEmployees(Pageable page, String employeeName){
+		Page<Employee> employeeList=null;
+		if(employeeName==null)
+			employeeList = employeeRepo.findAll(page);
+		else
+			employeeList = employeeRepo.findByEmployeeName(employeeName, page);
 		List<EmployeeBean> empBeanList = employeeList.getContent().stream().map(e-> e.fetchEmployeeBean()).collect(Collectors.toList());
 		
 		Map<String,Object> responseMap = new HashMap<String, Object>();
