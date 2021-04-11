@@ -2,9 +2,11 @@ package com.mycompany.sapient.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.mycompany.sapient.bean.EmployeeBean;
@@ -31,11 +33,15 @@ public class Employee {
 	@Column(name = "AGE")
 	private Integer age;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Department department;
+	
 	public EmployeeBean fetchEmployeeBean() {
 		EmployeeBean emp = new EmployeeBean();
 		emp.setAge(age);
 		emp.setEmployeeId(employeeId);
 		emp.setEmployeeName(employeeName);
+		emp.setDepartment(department.fetchDepartmentBean());
 		return emp;
 	}
 }

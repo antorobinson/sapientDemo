@@ -37,7 +37,7 @@ public class EmployeeController {
 	
 	@GetMapping("/employees")
 	public ResponseEntity<Map<String,Object>> getEmployees(
-			@RequestParam(value = "employeeName", required = false) String employeeName,
+			@RequestParam Map<String, String> allRequestParam,
 			@RequestParam(value = "page", defaultValue = "0") int page, 
 			@RequestParam(value = "size", defaultValue = "2") int size,
 			@RequestParam(value = "sort", defaultValue = "employeeId,asc") String[] sort
@@ -55,7 +55,12 @@ public class EmployeeController {
 		
 		Pageable paging = PageRequest.of(page, size, Sort.by(orderList));
 		
-		Map<String,Object> employeeBeanList = employeeService.getEmployees(paging, employeeName);
+		
+		final String employeeName = allRequestParam.containsKey("employeeName")?allRequestParam.get("employeeName"):null;
+		final Integer age = allRequestParam.containsKey("age")?Integer.valueOf(allRequestParam.get("age")):null;
+		final Long departmentId = allRequestParam.containsKey("departmentId")?Long.valueOf(allRequestParam.get("departmentId")):null;
+		
+		Map<String,Object> employeeBeanList = employeeService.getEmployees(paging, employeeName, age, departmentId);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(employeeBeanList);
 	}
